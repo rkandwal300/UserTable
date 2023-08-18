@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Details</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+    />
+    <style>
+      .parent {
+        border: 1px solid black;
+      }
+      .child {
+        border-bottom: 1px solid black;
+        border-right: 1px solid black;
+        padding-top: 10px;
+        padding-bottom: 20px;
+        padding-left: 30px;
+        padding-right: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <form method="post" name="myform" enctype="multipart/form-data">
+      <div>Registration of Users</div>
+      <table>
+        <tr>
+          <td>Full Name :-</td>
+          <td>
+            <input type="text" name="fullname" required placeholder="samxxx" />
+          </td>
+        </tr>
+        <tr>
+          <td>Email :-</td>
+          <td>
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="samxxx@gmail.com"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td>Phone :-</td>
+          <td>
+            <input type="text" name="phone" required placeholder="9870xxx" />
+          </td>
+        </tr>
+        <!-- <tr>
+                <td>Image :-  </td>
+                <td>  <input type="file"  name = "image" required accept=".gif,.jpg,.jpeg,.png,.doc,.docx" /></td>
+            </tr> -->
+        <tr>
+          <td>Password :-</td>
+          <td>
+            <input
+              type="text"
+              name="password"
+              required
+              placeholder="raJ870xxx"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <input type="submit" value="Submit" onclick="formdata(this.form)" />
+          </td>
+        </tr>
+      </table>
+    </form>
+    <table class="parent" cellpadding="14">
+      <thead style="border-bottom: 1px solid black">
+        <tr>
+          <td class="child">Sr.</td>
+          <td class="child">Name</td>
+          <td class="child">Email</td>
+          <td class="child">Phone</td>
+          <td class="child" style="border-right: 0px solid black">Operation</td>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+
+    <h1 id="root"></h1>
+  </body>
+  <script>
+    let i = 0;
+    const baseUrl = "http://localhost:2023";
+
+    if (i == 0) {
+      fetchData();
+      i++;
+    }
+
+    function delete_User(id) {
+      const xhttp = new XMLHttpRequest();
+
+      xhttp.onload = function () {
+        document.getElementById("root").innerHTML = this.responseText;
+        fetchData();
+      };
+      xhttp.open("DELETE", `${baseUrl}/delete`);
+      // xhttp.send(form_data);
+      xhttp.send(JSON.stringify(id));
+    }
+
+    function fetchData() {
+      const xhttp = new XMLHttpRequest();
+
+      xhttp.onload = function () {
+        const response = this.responseText;
+        const data = JSON.parse(response);
+        if (data.length > 0) {
+          document.getElementById("tbody").innerHTML = ``;
+          data.map((val, index) => {
+            document.getElementById("tbody").innerHTML += `     <tr  id="user${
+              val?.id
+            }" >
+                <td class="child"  > ${index + 1}  </td>
+                <td  id="name${val?.id}" class="child"  > ${
+              val?.fullname
+            }  </td>
+                <td   id="email${val?.id}"  class="child"  > ${
+              val?.email
+            }  </td>
+                <td  id="phone${val?.id}"  class="child"  > ${val?.phone}  </td>
+                <td   id="operation${
+                  val?.id
+                }" class="child" style ="border-right:0px solid black; display:flex;  "  > 
+                    <div onclick="delete_User(${val?.id})">
+                        <i style="color:red; font-size:20px; " class="fa fa-trash"></i>
+                    </div>    
+                    <div style="margin-left:20px;" onclick="Update_user(${
+                      val?.id
+                    })">
+                        <i style="color:blur=e; font-size:20px; " class="fa fa-pencil-square-o"></i>
+                    </div>    
+                </td>
+                <td id="submit${
+                  val?.id
+                }"   class="child" style ="border-right:0px solid black ; display:none;"   > <input type="button" value="submit" onclick="set_update_user(${
+              val?.id
+            })"" /> </td>
+            </tr>`;
+          });
+        }
+      };
+      xhttp.open("GET", `${baseUrl}/fetch`);
+      xhttp.send();
+    }
+
+    function Update_user(id) {
+      // targeting html tags via html id
+      const parent_element = document.getElementById(`user${id}`);
+      const name_element = document.getElementById(`name${id}`);
+      const email_element = document.getElementById(`email${id}`);
+      const phone_element = document.getElementById(`phone${id}`);
+      const operation_element = document.getElementById(`operation${id}`);
+      const submit_element = document.getElementById(`submit${id}`);
+
+      // adding css propert hide  operation and show  submit button
+      operation_element.style.display = "none";
+      submit_element.style.display = "block";
+
+      // making content editable
+
+      // name attribute editable
+      name_element.setAttribute("contenteditable", "true");
+      name_element.setAttribute("style", "border:2px solid green ");
+
+      // email attribute editable
+      email_element.setAttribute("contenteditable", "true");
+      email_element.setAttribute("style", "border:2px solid green ");
+
+      // phone attribute editable
+      phone_element.setAttribute("contenteditable", "true");
+      phone_element.setAttribute("style", "border:2px solid green ");
+
+      //name_element.removeAttribute(attributename)
+    }
+
+    function set_update_user(id) {
+      // targeting html tags via html id
+      const parent_element = document.getElementById(`user${id}`);
+      const name_element = document.getElementById(`name${id}`);
+      const email_element = document.getElementById(`email${id}`);
+      const phone_element = document.getElementById(`phone${id}`);
+      const operation_element = document.getElementById(`operation${id}`);
+      const submit_element = document.getElementById(`submit${id}`);
+
+      // adding css propert hide  operation and show  submit button
+      submit_element.style.display = "none";
+      operation_element.style.display = "flex";
+
+      // making content editable
+
+      // name attribute editable
+      name_element.setAttribute("contenteditable", "false");
+      name_element.setAttribute("style", " border-right: 1px solid black");
+      name_element.setAttribute("style", " border-bottom: 1px solid black");
+      // email attribute editable
+      email_element.setAttribute("contenteditable", "false");
+      email_element.setAttribute("style", " border-right: 1px solid black");
+      email_element.setAttribute("style", " border-bottom: 1px solid black");
+
+      // phone attribute editable
+      phone_element.setAttribute("contenteditable", "false");
+      phone_element.setAttribute("style", " border-right: 1px solid black");
+      phone_element.setAttribute("style", " border-bottom: 1px solid black");
+
+      //name_element.removeAttribute(attributename)
+      const Update_data = {
+        id: id,
+        name: name_element.innerHTML,
+        email: email_element.innerHTML,
+        phone: phone_element.innerHTML,
+      };
+
+      const xhttp = new XMLHttpRequest();
+
+      xhttp.onload = function () {
+        document.getElementById("root").innerHTML = this.responseText;
+      };
+      xhttp.open("PUT", `${baseUrl}/update`);
+      xhttp.send(JSON.stringify(Update_data));
+      fetchData();
+    }
+
+    function formdata(data) {
+      event.preventDefault();
+      const form_data = {
+        name: data.fullname.value,
+        email: data.email.value,
+        phone: data.phone.value,
+        // image    : data.image.value,
+        password: data.password.value,
+      };
+
+      const xhttp = new XMLHttpRequest();
+
+      xhttp.onload = function () {
+        document.getElementById("root").innerHTML = this.responseText;
+      };
+      xhttp.open("POST", `${baseUrl}/add`);
+      // xhttp.send(form_data);
+      xhttp.send(JSON.stringify(form_data));
+      // window.location.reload();
+      fetchData();
+    }
+  </script>
+</html>
