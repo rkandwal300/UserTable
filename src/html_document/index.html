@@ -89,8 +89,8 @@
   </body>
   <script>
     let i = 0;
-    const baseUrl = "https://userdata-uk3v.onrender.com";
-    <!-- const baseUrl = "http://localhost:2023"; -->
+    // const baseUrl = "https://userdata-uk3v.onrender.com";
+     const baseUrl = "http://localhost:2023"; 
 
     if (i == 0) {
       fetchData();
@@ -130,13 +130,13 @@
               val?.email
             }  </td>
                 <td  id="phone${val?.id}"  class="child"  > ${val?.phone}  </td>
-                <td   id="operation${
+                <td style="display:flex;"  id="operation${
                   val?.id
                 }" class="child" style ="border-right:0px solid black; display:flex;  "  > 
                     <div onclick="delete_User(${val?.id})">
                         <i style="color:red; font-size:20px; " class="fa fa-trash"></i>
                     </div>    
-                    <div style="margin-left:20px;" onclick="Update_user(${
+                    <div style="margin-left:20px; " onclick="Update_user(${
                       val?.id
                     })">
                         <i style="color:blur=e; font-size:20px; " class="fa fa-pencil-square-o"></i>
