@@ -1,5 +1,5 @@
-const fs = require("node:fs/promises");
-const path = require("node:path");
+const fs = require("fs/promises");
+const path = require("path");
 var { mysqlDatabase } = require("../mysql/mysql");
 
 module.exports.add_user = async (request, response) => {

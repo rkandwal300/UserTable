@@ -1,5 +1,5 @@
-const fs = require("node:fs/promises");
-const path = require("node:path");
+const fs = require("fs/promises");
+const path = require("path");
 
 module.exports.update_user = async (request, response) => {
   if (request.method == "PUT") {
