@@ -1,12 +1,9 @@
-const formidable = require("formidable");
-var fs = require("fs");
-var path = require("path");
+const fs = require("node:fs/promises");
+const path = require("node:path");
 var { mysqlDatabase } = require("../mysql/mysql");
 
 module.exports.add_user = async (request, response) => {
   if (request.method == "POST") {
-
-
     const chunks = [];
     request.on("data", (chunk, err) => {
       if (err) throw err;
@@ -29,19 +26,36 @@ module.exports.add_user = async (request, response) => {
           );
         }
 
+        const temp_data_address = path.join(__dirname, "../data/data.json");
         try {
-          let mysql_data = await mysqlDatabase(
-            `Insert INTO User_data  (fullname , phone , email , password ) VALUES ( '${temp.name}'  , '${temp.phone}' , '${temp.email}' , '${temp.password}' ) ;`
-          ); // data is sent  to mysql function
-          // let mysql_data = await mysqlDatabase("select * from User_data ;" , temp ,response ) // data is sent  to mysql function
-          if (mysql_data) {
-            response.end("data Recieved");
-          } else {
-            response.end("database error ");
+          const temp_data = await fs.readFile(temp_data_address, "utf-8");
+          const data_json = JSON.parse(temp_data);
+
+          var date = new Date();
+          var timestamp = `${date.getDate()}${
+            date.getMonth() + 1
+          }${date.getFullYear()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}${
+            date.getMilliseconds() * 12
+          }`;
+
+          let request_data = {
+            id: `${timestamp}`,
+            fullname: temp.name,
+            phone: temp.phone,
+            email: temp.phone,
+            password: temp.phone,
+          };
+
+          data_json.users.push(request_data);
+          try {
+            fs.writeFile(temp_data_address, JSON.stringify(data_json));
+
+            response.end(" user  data saved  in database");
+          } catch (e) {
+            response.end(" data cannot be saved " + e);
           }
         } catch (e) {
-
-          response.end("database error"+e);
+          response.end("database error" + e);
         }
       } else {
         response.end(" name field is empty ");

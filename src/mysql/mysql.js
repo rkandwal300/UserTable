@@ -33,7 +33,7 @@ function query_Mysql ( query  ){
                 return reject(error); 
             }
           
-                resolve(result);
+                resolve(JSON.parse(JSON.stringify(result)));
                 // conn.end((error) => {
                 //     if (error) {
                 //       console.error('Error closing MySQL connection:');

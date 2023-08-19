@@ -1,4 +1,5 @@
-var { mysqlDatabase } = require("../mysql/mysql");
+const fs= require ('node:fs/promises')
+const path= require ('node:path')
 const {Readable} = require ('stream')
 
 
@@ -8,19 +9,24 @@ module.exports.FetchData = async (request, response) => {
   if (request.method == "POST") {
     response.end("post resquest is not allowed in this route ");
   } else {
-    try {
-      const results = await mysqlDatabase("SELECT * FROM User_data ;");
-      const mysql_data = JSON.parse(JSON.stringify(results));
-      const JSON_mysql_Data = JSON.stringify(mysql_data);
 
+    const temp_data_address = path.join( __dirname ,'../data/data.json')
+    const temp_data = await fs.readFile( temp_data_address , "utf-8") 
+
+    const {users} = JSON.parse(temp_data) 
+    
+    
+    const response_data = JSON.stringify(users) ; 
+  
+   
+
+   
+      
       const json_stream = new Readable () ;
-      json_stream.push(JSON_mysql_Data) ;
+      json_stream.push( response_data) ;
       json_stream.push(null) ;
 
       json_stream.pipe(response ) ;
 
-    } catch (e) {
-      response.end("Database Error ");
-    }
   }
 };

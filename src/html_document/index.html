@@ -115,6 +115,7 @@
         const response = this.responseText;
         const data = JSON.parse(response);
         if (data.length > 0) {
+          console.log('data = ',data )
           document.getElementById("tbody").innerHTML = ``;
           data.map((val, index) => {
             document.getElementById("tbody").innerHTML += `     <tr  id="user${
