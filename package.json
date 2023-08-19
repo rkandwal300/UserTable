@@ -1,10 +1,6 @@
 {
   "dependencies": {
-    "formidable": "^3.5.0",
-    "multer": "^1.4.5-lts.1",
-    "mysql": "^2.18.1",
-    "nodemon": "^3.0.1",
-    "querystring": "^0.2.1"
+    "nodemon": "^3.0.1"
   },
   "name": "practice",
   "version": "1.0.0",
